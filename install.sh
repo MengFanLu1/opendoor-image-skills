@@ -50,12 +50,10 @@ echo "运行时: $RUNTIME"
 
 if [ "$RUNTIME" = "python" ]; then
     echo "正在安装 Python 依赖..."
-    if ! "$PYTHON_CMD" -m venv "$REPO_DIR/.venv" 2>/dev/null; then
+    if ! "$PYTHON_CMD" -m venv "$REPO_DIR/.venv"; then
+        echo "错误: 无法创建虚拟环境，请检查以上错误信息"
         if command -v apt-get &>/dev/null; then
-            echo "错误: 缺少 python3-venv，请先运行："
-            echo "  sudo apt install python3-venv"
-        else
-            echo "错误: 无法创建虚拟环境，请手动安装 python3-venv"
+            echo "  Debian/Ubuntu 可尝试: sudo apt install python3-venv python3-full"
         fi
         exit 1
     fi
