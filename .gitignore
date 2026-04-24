@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+generated_images/
+.env
+CLAUDE.md
+*.bak
+.index.json
+.index.lock
