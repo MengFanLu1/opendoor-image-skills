@@ -4,6 +4,8 @@
 
 支持 NanoBanana（Gemini 格式）和 gpt-image-2（OpenAI 格式），图片自动按日期+序号归档到本地。
 
+![demo](docs/images/20260424_001_Claude_Code_terminal_99e49b.png)
+
 ## 快速开始
 
 ```bash
