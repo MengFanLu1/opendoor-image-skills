@@ -1,6 +1,6 @@
 # opendoor-image-skills
 
-基于 [OpenDoor Hub](https://api.code-opendoor.com) 的 Claude Code AI 图片生成 Skill。
+基于 [OpenDoor](https://code-opendoor.com) 的 Claude Code AI 图片生成 Skill。
 
 支持 NanoBanana（Gemini 格式）和 gpt-image-2（OpenAI 格式），图片自动按日期+序号归档到本地。
 
@@ -39,7 +39,7 @@ python3 install.py
 ~/.claude/skills/opendoor-image-skills/.env
 ```
 
-在 [api.code-opendoor.com](https://api.code-opendoor.com) 获取 API 密钥。
+在 [code-opendoor.com](https://code-opendoor.com) 获取 API 密钥。
 
 ## 使用方法
 
