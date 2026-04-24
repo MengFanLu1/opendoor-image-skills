@@ -1,4 +1,4 @@
-# OpenDoor Image Skills - Windows 安装脚本
+﻿# OpenDoor Image Skills - Windows 安装脚本
 # 使用方法: powershell -ExecutionPolicy Bypass -File install.ps1
 
 $ErrorActionPreference = "Stop"
