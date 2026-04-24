@@ -70,7 +70,7 @@ fi
 
 cp "$SETTINGS" "$SETTINGS.bak"
 
-"${PYTHON_CMD:-python3}" - <<PYEOF
+"${PYTHON_CMD:-python3}" - <<PYEOF 2>&1
 import json, sys, os
 
 settings_path = "$SETTINGS"
@@ -97,15 +97,12 @@ already_installed = any(
 )
 if not already_installed:
     prompt_hooks.append(hook_entry)
-    print("Hook 已添加")
+    with open(settings_path, "w", encoding="utf-8") as f:
+        json.dump(settings, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+    print("Hook 已添加，settings.json 更新完成")
 else:
     print("Hook 已存在，跳过")
-
-with open(settings_path, "w", encoding="utf-8") as f:
-    json.dump(settings, f, ensure_ascii=False, indent=2)
-    f.write("\n")
-
-print("settings.json 更新完成")
 PYEOF
 
 # ─── 创建 .env 文件 ───────────────────────────────────────────
@@ -118,12 +115,12 @@ else
     echo ".env 文件已存在，跳过"
 fi
 
-CURRENT_KEY=$(grep -E '^OPENDOOR_IMAGE_API_KEY=.+' "$ENV_FILE" 2>/dev/null | head -1 | cut -d= -f2-)
+CURRENT_KEY=$(grep -E '^OPENDOOR_IMAGE_API_KEY=.+' "$ENV_FILE" 2>/dev/null | head -1 | cut -d= -f2- || true)
 if [ -z "$CURRENT_KEY" ]; then
     echo ""
     echo "请输入你的 API 密钥（从 https://api.code-opendoor.com 获取）"
     printf "API Key: "
-    read -r API_KEY || API_KEY=""
+    read -r API_KEY </dev/tty || API_KEY=""
     if [ -n "$API_KEY" ]; then
         if [[ "$OSTYPE" == "darwin"* ]]; then
             sed -i '' "s|^OPENDOOR_IMAGE_API_KEY=.*|OPENDOOR_IMAGE_API_KEY=$API_KEY|" "$ENV_FILE"

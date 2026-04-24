@@ -104,13 +104,11 @@ if (-not $AlreadyInstalled) {
         hooks = @(@{ type = "command"; command = $HookCommand })
     }
     $SettingsObj.hooks.UserPromptSubmit += $HookEntry
-    Write-Host "Hook 已添加"
+    $SettingsObj | ConvertTo-Json -Depth 10 | Set-Content $Settings -Encoding UTF8
+    Write-Host "Hook 已添加，settings.json 更新完成"
 } else {
     Write-Host "Hook 已存在，跳过"
 }
-
-$SettingsObj | ConvertTo-Json -Depth 10 | Set-Content $Settings -Encoding UTF8
-Write-Host "settings.json 更新完成"
 
 # ─── 创建 .env 文件 ───────────────────────────────────────────
 

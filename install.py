@@ -104,14 +104,12 @@ def update_settings(claude_dir: Path):
     already_installed = any(h.get("matcher") == matcher for h in prompt_hooks)
     if not already_installed:
         prompt_hooks.append(hook_entry)
-        print("Hook 已添加")
+        with open(settings_path, "w", encoding="utf-8") as f:
+            json.dump(settings, f, ensure_ascii=False, indent=2)
+            f.write("\n")
+        print("Hook 已添加，settings.json 更新完成")
     else:
         print("Hook 已存在，跳过")
-
-    with open(settings_path, "w", encoding="utf-8") as f:
-        json.dump(settings, f, ensure_ascii=False, indent=2)
-        f.write("\n")
-    print("settings.json 更新完成")
 
 
 def setup_env_file(skill_dir: Path):
