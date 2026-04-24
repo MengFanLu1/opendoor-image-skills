@@ -49,9 +49,8 @@ def detect_runtime() -> tuple[str, str]:
     sys.exit(1)
 
 
-def setup_venv():
+def setup_venv(venv_dir: Path):
     print("正在安装 Python 依赖...")
-    venv_dir = REPO_DIR / ".venv"
     if not venv_dir.exists():
         subprocess.run([sys.executable, "-m", "venv", str(venv_dir)], check=True)
 
@@ -164,11 +163,14 @@ def main():
     print("")
 
     claude_dir = get_claude_dir()
+    skill_dir = install_skill(claude_dir)
 
     if runtime == "python":
-        setup_venv()
+        venv_dir = skill_dir / ".venv"
+        setup_venv(venv_dir)
+    else:
+        venv_dir = None
 
-    skill_dir = install_skill(claude_dir)
     update_settings(claude_dir)
     setup_env_file(skill_dir)
 
@@ -177,9 +179,9 @@ def main():
     print("")
     if runtime == "python":
         if platform.system() == "Windows":
-            py_exe = REPO_DIR / ".venv" / "Scripts" / "python.exe"
+            py_exe = venv_dir / "Scripts" / "python.exe"
         else:
-            py_exe = REPO_DIR / ".venv" / "bin" / "python3"
+            py_exe = venv_dir / "bin" / "python3"
         print(f"运行时: Python (.venv)")
         print(f"  脚本: {py_exe} {REPO_DIR / 'scripts' / 'generate.py'}")
     else:

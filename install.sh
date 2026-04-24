@@ -5,6 +5,8 @@ REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CLAUDE_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 SKILL_DIR="$CLAUDE_DIR/skills/opendoor-image-skills"
 SETTINGS="$CLAUDE_DIR/settings.json"
+# venv 放到用户目录，避免 /opt 等只读场景权限问题
+VENV_DIR="${OPENDOOR_VENV_DIR:-$SKILL_DIR/.venv}"
 
 echo "OpenDoor Image Skills - 安装程序"
 echo "================================="
@@ -46,27 +48,27 @@ fi
 
 echo "运行时: $RUNTIME"
 
-# ─── Python: 创建 venv 并安装依赖 ────────────────────────────
-
-if [ "$RUNTIME" = "python" ]; then
-    echo "正在安装 Python 依赖..."
-    if ! "$PYTHON_CMD" -m venv "$REPO_DIR/.venv"; then
-        echo "错误: 无法创建虚拟环境，请检查以上错误信息"
-        if command -v apt-get &>/dev/null; then
-            echo "  Debian/Ubuntu 可尝试: sudo apt install python3-venv python3-full"
-        fi
-        exit 1
-    fi
-    "$REPO_DIR/.venv/bin/pip" install -q -r "$REPO_DIR/requirements.txt"
-    echo "依赖安装完成"
-fi
-
 # ─── 安装 skill 到 Claude Code ────────────────────────────────
 
 echo "正在安装 skill..."
 mkdir -p "$SKILL_DIR"
 cp "$REPO_DIR/SKILL.md" "$SKILL_DIR/SKILL.md"
 echo "Skill 已安装到 $SKILL_DIR"
+
+# ─── Python: 创建 venv 并安装依赖 ────────────────────────────
+
+if [ "$RUNTIME" = "python" ]; then
+    echo "正在安装 Python 依赖..."
+    if ! "$PYTHON_CMD" -m venv "$VENV_DIR"; then
+        echo "错误: 无法创建虚拟环境，请检查以上错误信息"
+        if command -v apt-get &>/dev/null; then
+            echo "  Debian/Ubuntu 可尝试: sudo apt install python3-venv python3-full"
+        fi
+        exit 1
+    fi
+    "$VENV_DIR/bin/pip" install -q -r "$REPO_DIR/requirements.txt"
+    echo "依赖安装完成"
+fi
 
 # ─── 修改 settings.json（幂等）────────────────────────────────
 
@@ -146,7 +148,7 @@ echo "安装完成！"
 echo ""
 if [ "$RUNTIME" = "python" ]; then
     echo "运行时: Python (.venv)"
-    echo "  脚本: $REPO_DIR/.venv/bin/python3 $REPO_DIR/scripts/generate.py"
+    echo "  脚本: $VENV_DIR/bin/python3 $REPO_DIR/scripts/generate.py"
 else
     echo "运行时: Node.js"
     echo "  脚本: node $REPO_DIR/scripts/generate.js"

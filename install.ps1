@@ -48,24 +48,24 @@ if (-not $Runtime) {
 
 Write-Host "运行时: $Runtime"
 
+# ─── 安装 skill 到 Claude Code ────────────────────────────────
+
+Write-Host "正在安装 skill..."
+if (-not (Test-Path $SkillDir)) {
+    New-Item -ItemType Directory -Path $SkillDir -Force | Out-Null
+}
+
 # ─── Python: 创建 venv 并安装依赖 ────────────────────────────
 
 if ($Runtime -eq "python") {
     Write-Host "正在安装 Python 依赖..."
-    $VenvDir = Join-Path $RepoDir ".venv"
+    $VenvDir = Join-Path $SkillDir ".venv"
     if (-not (Test-Path $VenvDir)) {
         & $PythonCmd -m venv $VenvDir
     }
     $PipPath = Join-Path $VenvDir "Scripts\pip.exe"
     & $PipPath install -q -r (Join-Path $RepoDir "requirements.txt")
     Write-Host "依赖安装完成"
-}
-
-# ─── 安装 skill 到 Claude Code ────────────────────────────────
-
-Write-Host "正在安装 skill..."
-if (-not (Test-Path $SkillDir)) {
-    New-Item -ItemType Directory -Path $SkillDir -Force | Out-Null
 }
 Copy-Item (Join-Path $RepoDir "SKILL.md") (Join-Path $SkillDir "SKILL.md") -Force
 Write-Host "Skill 已安装到 $SkillDir"
@@ -140,7 +140,7 @@ Write-Host ""
 Write-Host "安装完成！"
 Write-Host ""
 if ($Runtime -eq "python") {
-    $PythonExe = Join-Path $RepoDir ".venv\Scripts\python.exe"
+    $PythonExe = Join-Path $SkillDir ".venv\Scripts\python.exe"
     $GenScript = Join-Path $RepoDir "scripts\generate.py"
     Write-Host "运行时: Python (.venv)"
     Write-Host "  脚本: $PythonExe $GenScript"
