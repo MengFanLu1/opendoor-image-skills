@@ -71,6 +71,7 @@ def install_skill(claude_dir: Path) -> Path:
     skill_dir = claude_dir / "skills" / "opendoor-image-skills"
     skill_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy2(REPO_DIR / "SKILL.md", skill_dir / "SKILL.md")
+    (skill_dir / ".repo_path").write_text(str(REPO_DIR), encoding="utf-8")
     print(f"Skill 已安装到 {skill_dir}")
     return skill_dir
 

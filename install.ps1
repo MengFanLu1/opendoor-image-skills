@@ -68,6 +68,7 @@ if ($Runtime -eq "python") {
     Write-Host "依赖安装完成"
 }
 Copy-Item (Join-Path $RepoDir "SKILL.md") (Join-Path $SkillDir "SKILL.md") -Force
+$RepoDir | Out-File -FilePath (Join-Path $SkillDir ".repo_path") -Encoding utf8 -NoNewline
 Write-Host "Skill 已安装到 $SkillDir"
 
 # ─── 修改 settings.json（幂等）────────────────────────────────

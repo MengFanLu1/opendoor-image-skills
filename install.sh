@@ -53,6 +53,7 @@ echo "运行时: $RUNTIME"
 echo "正在安装 skill..."
 mkdir -p "$SKILL_DIR"
 cp "$REPO_DIR/SKILL.md" "$SKILL_DIR/SKILL.md"
+echo "$REPO_DIR" > "$SKILL_DIR/.repo_path"
 echo "Skill 已安装到 $SKILL_DIR"
 
 # ─── Python: 创建 venv 并安装依赖 ────────────────────────────
